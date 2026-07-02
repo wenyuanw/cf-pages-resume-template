@@ -1,0 +1,26 @@
+{
+  "name": "cf-pages-resume-template",
+  "version": "1.0.0",
+  "private": false,
+  "description": "一个基于 Markdown 的开源静态简历模板，可部署到 Cloudflare Pages",
+  "homepage": "https://github.com/wenyuanw/cf-pages-resume-template",
+  "author": "wenyuan",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "npx http-server public -p 8080 -c-1",
+    "preview": "npx http-server public -p 8080 -c-1",
+    "deploy": "wrangler pages deploy public --project-name cf-pages-resume-template",
+    "deploy:prod": "wrangler pages deploy public --project-name cf-pages-resume-template --branch main",
+    "pages:list": "wrangler pages project list",
+    "whoami": "wrangler whoami",
+    "login": "wrangler login",
+    "logout": "wrangler logout"
+  },
+  "devDependencies": {
+    "wrangler": "^4.105.0"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  }
+}

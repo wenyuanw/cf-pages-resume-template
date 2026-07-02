@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+  <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+  <title>Open Resume Template</title>
+  <meta name="description" content="一个开源的 Markdown 静态简历模板" />
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <script>
+    (function () {
+      try {
+        var savedTheme = localStorage.getItem("resume-theme");
+        var theme = savedTheme
+          || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+
+        var savedLocale = localStorage.getItem("resume-locale");
+        if (savedLocale === "en" || savedLocale === "zh") {
+          document.documentElement.lang = savedLocale === "en" ? "en" : "zh-CN";
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <div class="toolbar" id="toolbar">
+    <div class="toolbar__left">
+      <button id="toggle-lang" class="toolbar__btn toolbar__btn--lang" type="button" title="Switch to English" aria-label="Switch to English">En</button>
+      <button id="toggle-theme" class="toolbar__btn" type="button" title="切换深色/浅色模式" aria-label="切换深色/浅色模式"></button>
+    </div>
+    <div class="toolbar__actions">
+      <button id="export-pdf" class="toolbar__btn" type="button" title="导出为 PDF">导出 PDF</button>
+      <button id="export-md" class="toolbar__btn" type="button" title="导出为 Markdown 文件">导出 Markdown</button>
+    </div>
+  </div>
+
+  <template id="resume-skeleton">
+    <div class="resume__skeleton" aria-hidden="true">
+      <div class="skeleton skeleton--name"></div>
+      <div class="skeleton skeleton--tagline"></div>
+      <div class="skeleton skeleton--contacts"></div>
+      <div class="skeleton skeleton--highlights"></div>
+      <div class="skeleton__divider"></div>
+
+      <div class="skeleton__section">
+        <div class="skeleton skeleton--h2"></div>
+        <div class="skeleton skeleton--line"></div>
+        <div class="skeleton skeleton--line"></div>
+        <div class="skeleton skeleton--line skeleton--line-md"></div>
+      </div>
+
+      <div class="skeleton__section">
+        <div class="skeleton skeleton--h2"></div>
+        <div class="skeleton skeleton--line"></div>
+        <div class="skeleton skeleton--line skeleton--line-md"></div>
+        <div class="skeleton skeleton--line skeleton--line-sm"></div>
+      </div>
+    </div>
+  </template>
+
+  <main class="resume" id="resume" aria-busy="true" aria-label="正在加载简历"></main>
+
+  <script>
+    (function () {
+      var resume = document.getElementById("resume");
+      var tpl = document.getElementById("resume-skeleton");
+      if (resume && tpl) resume.appendChild(tpl.content.cloneNode(true));
+    })();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+  <script src="./main.js"></script>
+</body>
+</html>
