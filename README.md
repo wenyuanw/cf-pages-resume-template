@@ -14,14 +14,18 @@
 
 ```text
 .
-├── public/
+├── src/                      # 源文件（进仓库）
 │   ├── resume.md
 │   ├── resume.en.md
-│   ├── index.html
+│   ├── index.template.html
 │   ├── main.js
 │   ├── style.css
 │   ├── robots.txt
 │   └── _headers
+├── dist/                     # 构建产物（gitignore，部署此目录）
+├── scripts/
+│   ├── build.mjs
+│   └── render-resume.mjs
 ├── package.json
 ├── wrangler.toml
 └── .gitignore
@@ -29,8 +33,8 @@
 
 ## 特性
 
-- Markdown 驱动
-- 内置中英文切换
+- Markdown 驱动，构建时预渲染为 HTML
+- 内置中英文切换，主题切换
 - 支持导出 PDF 和 Markdown
 - 可直接部署到 Cloudflare Pages
 
@@ -45,9 +49,11 @@ npm run dev
 
 ## 如何自定义
 
-- 编辑 `public/resume.md` 自定义中文简历
-- 编辑 `public/resume.en.md` 自定义英文简历
-- 编辑 `public/style.css` 调整样式
+1. 编辑 `src/resume.md` 自定义中文简历
+2. 编辑 `src/resume.en.md` 自定义英文简历
+3. 编辑 `src/style.css` 调整样式
+
+`dist/` 由构建生成，不提交到仓库。本地预览或部署前执行 `npm run build`（`npm run dev` / `npm run deploy` 会自动执行）。
 
 ## 部署
 
@@ -68,4 +74,4 @@ npm run deploy
 2. 选择 `Create application`
 3. 选择 `Pages` -> `Connect to Git`
 4. 选择你的仓库 `wenyuanw/cf-pages-resume-template`
-5. 构建配置保持为空，输出目录填写 `public`
+5. 构建命令填写 `npm run build`，输出目录填写 `dist`
