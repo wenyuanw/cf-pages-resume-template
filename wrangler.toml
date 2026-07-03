@@ -1,4 +1,6 @@
 # Cloudflare Pages config
+# Git 部署时还需在 CF 控制台设置构建命令：npm run build
+# （wrangler.toml 只负责输出目录，不包含 build command）
 
 name = "cf-pages-resume-template"
 compatibility_date = "2026-06-26"

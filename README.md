@@ -71,7 +71,19 @@ npm run deploy
 ### GitHub 仓库连接部署
 
 1. 进入 Cloudflare `Workers & Pages`
-2. 选择 `Create application`
-3. 选择 `Pages` -> `Connect to Git`
-4. 选择你的仓库 `wenyuanw/cf-pages-resume-template`
-5. 构建命令填写 `npm run build`，输出目录填写 `dist`
+2. 选择你的 Pages 项目 → **Settings** → **Build**
+3. 配置如下：
+
+| 字段 | 值 |
+|---|---|
+| 构建命令 (Build command) | `npm run build` |
+| 构建输出目录 (Build output directory) | `dist` |
+| 根目录 (Root directory) | `/`（留空即可） |
+
+4. 保存后重新触发部署
+
+> **说明**：`wrangler.toml` 里的 `pages_build_output_dir` 只告诉 CF 输出目录是 `dist`，**不会**自动执行构建。`dist/` 在 gitignore 里，仓库中不存在，所以必须在控制台填写构建命令 `npm run build`，否则会出现 `Output directory "dist" not found`。
+
+### 部署失败排查
+
+若日志出现 `No build command specified. Skipping build step` 和 `Output directory "dist" not found`，说明构建步骤被跳过了——去控制台 **Settings → Build** 把构建命令改为 `npm run build` 即可。
