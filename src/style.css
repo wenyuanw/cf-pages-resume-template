@@ -509,8 +509,13 @@ html:lang(zh) .resume__name {
     padding: 12px 22px;
   }
 
-  .toolbar__actions {
+  #export-pdf,
+  #export-md {
     display: none;
+  }
+
+  #copy-md {
+    min-width: auto;
   }
 
   .resume {
