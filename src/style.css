@@ -465,6 +465,11 @@ html:lang(zh) .resume__name {
   justify-content: flex-end;
 }
 
+#copy-md {
+  min-width: 8.5rem;
+  justify-content: flex-end;
+}
+
 @media print {
   :root, :root[data-theme="dark"] {
     --bg: #ffffff;

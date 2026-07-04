@@ -11,6 +11,9 @@
     zh: {
       exportPdf: "导出 PDF",
       exportMd: "导出 Markdown",
+      copyMd: "复制 Markdown",
+      copyMdTitle: "复制 Markdown 内容到剪贴板",
+      copyMdDone: "已复制",
       themeTitle: "切换深色/浅色模式",
       langTitle: "切换英文",
       langLabel: "En",
@@ -19,6 +22,9 @@
     en: {
       exportPdf: "Export PDF",
       exportMd: "Export Markdown",
+      copyMd: "Copy Markdown",
+      copyMdTitle: "Copy Markdown to clipboard",
+      copyMdDone: "Copied",
       themeTitle: "Toggle dark/light mode",
       langTitle: "Switch to Chinese",
       langLabel: "中",
@@ -70,6 +76,7 @@
     const themeBtn = document.getElementById("toggle-theme");
     const exportPdfBtn = document.getElementById("export-pdf");
     const exportMdBtn = document.getElementById("export-md");
+    const copyMdBtn = document.getElementById("copy-md");
 
     if (langBtn) {
       langBtn.textContent = ui.langLabel;
@@ -82,6 +89,11 @@
     }
     if (exportPdfBtn) exportPdfBtn.textContent = ui.exportPdf;
     if (exportMdBtn) exportMdBtn.textContent = ui.exportMd;
+    if (copyMdBtn && !copyMdBtn.dataset.copied) {
+      copyMdBtn.textContent = ui.copyMd;
+      copyMdBtn.title = ui.copyMdTitle;
+      copyMdBtn.setAttribute("aria-label", ui.copyMdTitle);
+    }
   }
 
   function showPanel(locale) {
@@ -227,6 +239,27 @@
           a.click();
           document.body.removeChild(a);
           URL.revokeObjectURL(url);
+        } catch (err) {
+          alert(err.message);
+        }
+      });
+    }
+
+    const copyMdBtn = document.getElementById("copy-md");
+    if (copyMdBtn && !copyMdBtn.dataset.bound) {
+      copyMdBtn.dataset.bound = "1";
+      copyMdBtn.addEventListener("click", async () => {
+        const ui = UI[currentLocale];
+        try {
+          const text = await fetchMarkdown(currentLocale);
+          await navigator.clipboard.writeText(text);
+          copyMdBtn.dataset.copied = "1";
+          copyMdBtn.textContent = ui.copyMdDone;
+          pulseButton(copyMdBtn, "is-switching");
+          setTimeout(() => {
+            delete copyMdBtn.dataset.copied;
+            copyMdBtn.textContent = ui.copyMd;
+          }, 1600);
         } catch (err) {
           alert(err.message);
         }
