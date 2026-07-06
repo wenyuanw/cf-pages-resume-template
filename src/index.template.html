@@ -10,6 +10,17 @@
   <link rel="stylesheet" href="./style.css" />
   <script>
     (function () {
+      function resolveResumeLocale() {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var urlLang = params.get("lang");
+          if (urlLang === "en" || urlLang === "zh") return urlLang;
+          var savedLocale = localStorage.getItem("resume-locale");
+          if (savedLocale === "en" || savedLocale === "zh") return savedLocale;
+        } catch (e) {}
+        return "zh";
+      }
+
       try {
         var savedTheme = localStorage.getItem("resume-theme");
         var theme = savedTheme
@@ -18,10 +29,9 @@
             : "light");
         document.documentElement.setAttribute("data-theme", theme);
 
-        var savedLocale = localStorage.getItem("resume-locale");
-        if (savedLocale === "en" || savedLocale === "zh") {
-          document.documentElement.lang = savedLocale === "en" ? "en" : "zh-CN";
-        }
+        window.__RESUME_LOCALE__ = resolveResumeLocale();
+        document.documentElement.lang =
+          window.__RESUME_LOCALE__ === "en" ? "en" : "zh-CN";
       } catch (e) {}
     })();
   </script>
@@ -44,6 +54,19 @@
     <div class="resume__panel" id="resume-en" data-locale="en" data-title="{{TITLE_EN}}" hidden>{{RESUME_EN}}</div>
   </main>
 
+  <script>
+    (function () {
+      var locale = window.__RESUME_LOCALE__ || "zh";
+      if (locale !== "en") return;
+      var zh = document.getElementById("resume-zh");
+      var en = document.getElementById("resume-en");
+      if (zh) zh.hidden = true;
+      if (en) {
+        en.hidden = false;
+        if (en.dataset.title) document.title = en.dataset.title;
+      }
+    })();
+  </script>
   <script src="./main.js"></script>
 </body>
 </html>

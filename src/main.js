@@ -53,7 +53,16 @@
     );
   }
 
+  function getLocaleFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const lang = params.get("lang");
+    if (lang === "en" || lang === "zh") return lang;
+    return null;
+  }
+
   function getLocale() {
+    const fromUrl = getLocaleFromUrl();
+    if (fromUrl) return fromUrl;
     try {
       const saved = localStorage.getItem("resume-locale");
       if (saved === "en" || saved === "zh") return saved;
@@ -61,12 +70,30 @@
     return "zh";
   }
 
-  function setLocale(locale) {
+  function syncLocaleToUrl(locale, { replace = false } = {}) {
+    const url = new URL(window.location.href);
+    if (locale === "zh") {
+      url.searchParams.delete("lang");
+    } else {
+      url.searchParams.set("lang", locale);
+    }
+    const state = { resumeLocale: locale };
+    if (replace) {
+      history.replaceState(state, "", url);
+    } else {
+      history.pushState(state, "", url);
+    }
+  }
+
+  function setLocale(locale, { syncUrl = true, historyMode = "replace" } = {}) {
     currentLocale = locale;
     try {
       localStorage.setItem("resume-locale", locale);
     } catch (e) {}
     document.documentElement.lang = locale === "en" ? "en" : "zh-CN";
+    if (syncUrl && historyMode !== "none") {
+      syncLocaleToUrl(locale, { replace: historyMode === "replace" });
+    }
     updateUiLabels();
   }
 
@@ -197,8 +224,15 @@
     btn.addEventListener("click", async () => {
       const next = currentLocale === "zh" ? "en" : "zh";
       pulseButton(btn, "is-switching");
-      setLocale(next);
+      setLocale(next, { historyMode: "push" });
       await animateLocaleSwap(next);
+    });
+
+    window.addEventListener("popstate", async () => {
+      const locale = getLocale();
+      if (locale === currentLocale) return;
+      setLocale(locale, { syncUrl: false, historyMode: "none" });
+      await animateLocaleSwap(locale);
     });
   })();
 
@@ -267,7 +301,7 @@
     }
   }
 
-  updateUiLabels();
+  setLocale(currentLocale, { historyMode: "replace" });
   showPanel(currentLocale);
   bindExportButtons();
 })();
